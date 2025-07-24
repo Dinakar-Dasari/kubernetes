@@ -34,4 +34,21 @@
 + TO check on which nodes pods are running
   ```
   kubectl get pods -o wide
-  ```    
+  ```
++ To login into the pods:
+   ```
+  kubectl exec -it <podname> -- bash
+   ```   
++ To delete pod
+   ```
+  kubectl delete -f <manifest file>
+   ``` 
++ To debug pods use **_describe_** option:
+  + To show all pods:\
+          ```
+        kubectl describe pods
+          ```
+  + To show certain pod:
+      ```
+    kubectl describe pod <pod-name>
+      ```
