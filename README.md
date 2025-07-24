@@ -19,6 +19,10 @@
   + Customize node groups (worker nodes)
   + Configure networking, security groups, IAM, etc.
   + Set specific instance types, AMIs, scaling parameter
++ Delete a cluster
+   ```
+  eksctl delete cluster --name=<<clustername>
+   ```
 + To see the worker nodes created in the cluster
      ```
     kubectl get nodes
