@@ -52,3 +52,15 @@
       ```
     kubectl describe pod <pod-name>
       ```
+  + To list all the services
+     ```
+    kubectl get svc /services
+     ```   
+  + To see the details about a service, like endpoint(to which pods), ip of service..etc
+     ```
+    kubectl describe svc <name of service>
+     ```
+  + command to see the replica sets
+     ```
+     kubectl get rs
+    ```
