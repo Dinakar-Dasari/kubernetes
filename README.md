@@ -64,3 +64,11 @@
      ```
      kubectl get rs
     ```
+  + command for deployments history
+    ```
+    kubectl rollout history deployment/<name of deployment>
+    ```   
+  +  Rollback a previous deployment
+      ```
+     kubectl rollout undo deployment/<deployment name>
+     ```
