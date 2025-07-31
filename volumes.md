@@ -68,6 +68,12 @@
       + If PVC is deleted ➝ K8s checks ReclaimPolicy to decide PV fate.
       + If ReclaimPolicy is Delete ➝ PV and data gone.
       + If ReclaimPolicy is Retain ➝ PV and data remain (need manual cleanup/reclaiming).
+        | Event                            | PVC Exists? | PV Exists?   | Underlying Storage (EBS/NFS) | Notes                 |
+        | -------------------------------- | ----------- | ------------ | ---------------------------- | --------------------- |
+        | Pod deleted                      | ✅           | ✅            | ✅                            | No change             |
+        | PVC deleted + `Retain`           | ❌           | ✅ (Released) | ✅                            | Manual cleanup needed |
+        | PVC deleted + `Delete`           | ❌           | ❌            | ❌                            | Fully cleaned up      |
+        | PVC deleted + `Recycle` (legacy) | ❌           | ✅ (Reused)   | ✅ (wiped)                    | Not used today        |
   + **_Storage Class:_**
     +  Earlier, we had to manually define PVs first. But that’s not scalable.
     +  Define a template for how PVs should be dynamically provisioned
