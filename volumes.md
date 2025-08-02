@@ -6,6 +6,7 @@
   + But, this is not the case in Multi Node.
 + **Multi-Node:**
   + If one pod writes data to /data on Node A, and then the pod is moved to Node B, does /data on Node B have the same data. It's not. So, there is inconsistent data storage.
+  + Volumes should be outside of the cluster (Like AWS)
   + Which is not recommended for stateful app (like data bases)
   + So, to achieve consistent and shared storage across nodes, an external, replicated storage solution should be used.
   + External storage options like Network File System (NFS), EBS(public cloud storage)
@@ -19,7 +20,7 @@
   + **_EBS (Elastic Block Store) is block storage from AWS._**
     + It acts like a hard disk.
     + data transfer is very fast.
-    + should be as near as possible to the system/server
+    + should be as near as possible to the system/server(should be in Same Availability zone)
     + Can be used only by one node at a time (ReadWriteOnce).
     + Good for databases, etc.
     + Example: Hard-disk
@@ -89,6 +90,39 @@
   +   Kubernetes creates a new EBS disk.
   +   Pod uses the PVC → writes data to the EBS disk.
   +   Pod dies? Data still there. Pod moves? Data is reattached.
+ 
++  PV --> cluster level
++  PVC --> Name Space level
++  EKS admins control cluster level objects(PV).
++  As a roboshop devops engineer, you need a disk to be created for your application,
++  we will raise a ticket for this. 5 GB, filesystem type(ext4), etc..it is approved by roboshop team lead/delivery lead. Storage team also checks this and it is approved their team leader.
++  then storage team creates the disk.
++  provide these disk details to EKS admin, then they create PV for us and tell us the name.
++  EBS size is fixed, EFS is elastic it automatically grows upto 48TB.
+  
++  EBS or EFS static
+=================
+1. Install drivers
+2. Give permissions in EC2 role
+3. create volume
+4. create PV(physical representation of volume)
+5. create PVC
+6. volume mount to pod
+if EBS volume should be in the same az as in instance
+if EFS SG should allow port 2049
+
++ EBS of EFS dynamic
+=================
+1. Install drivers
+2. Give permissions in EC2 role
+3. create storage class
+4. create PVC with SC name, volume and PV will be created automatically
+5. volume mount to pod
+in case of dynamic pod pvc creates volume, so it creates in the same az where ec2 instance is there
+if EFS SG should allow port 2049
+
+   
+ 
        
       
 
