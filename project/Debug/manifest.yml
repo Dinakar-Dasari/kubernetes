@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: roboshop
+  labels:
+    purpose: debugging
+spec:
+  containers:
+    - name: debug
+      image: dd070/debug:v1    

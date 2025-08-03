@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  labels:
+    purpose: deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      purpose: for-testing-deployment   ## this should match with pod labelx`
+  template:
+    metadata:
+      labels:
+        purpose: for-testing-deployment
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.29.0           

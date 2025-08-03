@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerate
+  labels:
+    purpose: "testing-taint-concept"
+    project: roboshop
+spec:
+  containers:
+    - name: nginx
+      image: nginx      

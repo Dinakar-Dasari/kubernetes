@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset
+  labels:
+    purpose: replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      purpose: for-testing-replicaset   ## this should match with pod labelx`
+  template:
+    metadata:
+      labels:
+        purpose: for-testing-replicaset
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.29.0           

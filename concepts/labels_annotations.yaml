@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "labels-annotations"
+  labels:
+    project: roboshop
+    environment: dev
+  annotations:
+    githublink: "https://myteam.docs/my-service"  
+    description: "I'm gonna commit in github"
+spec:
+  containers:
+    - name: nginx
+      image: nginx    
