@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: taint-01
+  labels:
+    purpose: "testing-taint-concept"
+    project: roboshop
+spec:
+  containers:
+    - name: nginx
+      image: nginx  
+  nodeSelector:
+    project: "roboshop"          
+## pod won't be scheduled on node selector because it is tainted with noSchedule.
+## To schedule it we should use toleration
+  tolerations:
+    - key: "gpu"
+      value: "true"
+      operator: "Equal"
+      effect: "NoSchedule"
+### To remove all the running pods taint with NoExecute
+## again to schedule pods we need to use two tolerations, one with NOSchedule & other with NoExecute.
+## If you remove any of them then only one toleration is needed

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-node-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - roboshop
+      - weight: 20
+        preference:
+          matchExpressions:
+          - key: course
+            operator: In
+            values:
+            - devops      
+  containers:
+  - name: with-node-affinity
+    image: nginx
