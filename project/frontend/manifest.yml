@@ -124,7 +124,12 @@ spec:
     tier: web
   ports:
     - protocol: TCP
-      targetPort: 8080
-      port: 80
+      targetPort: 8080   # Port on the pods where the app is listening
+      port: 80  ## External port clients access (e.g., http://loadbalancer-ip:80)
+
+
+# When you create a Service of type LoadBalancer (as in the example below), Kubernetes automatically creates:A ClusterIP for internal pod routing.
+# A NodePort to expose the service on each node, even if you don’t specify it in the YAML.
+
 
               
