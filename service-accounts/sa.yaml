@@ -34,7 +34,7 @@ metadata:
   labels:
     purpose: rbac-testing
 spec:
-  ServiceAccount: roboshop-mysql-secret-reader
+  serviceAccount: roboshop-mysql-secret-reader
   containers:
     - name: aws-cli
       image: amazon/aws-cli
