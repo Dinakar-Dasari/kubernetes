@@ -121,6 +121,38 @@
   in case of dynamic pod pvc creates volume, so it creates in the same az where ec2 instance is there
   if EFS SG should allow port 2049
 
+## Ephemeral Volumes:
+ + Means these volumes are temporary, It's lifecycle is short.
+ + **Lifecycle depends on pod. When the pod terminates/restarts the data is gone.**
+ + We shouldn't use them for statlful set applications.
+ + The data is stored at `/var/lib/kubelet/pods/<pod-UID>/volumes/kubernetes.io~empty-dir/<volume-name>/` in node(host)
+ + That <pod-UID> changes when a Pod is deleted and recreated (even if it has the same name).
+ + When the old pod object is gone, Kubernetes deletes that directory, so the data is lost.
+ + if the container restarts inside the same pod, the pod UID stays the same and data persists.
+ + But When the pod terminates for any reason—a restart, a failure, or a manual deletion—the ephemeral volume is also deleted. UID changes so no data. 
+ + `Ephemeral volume lifetime = lifetime of the pod UID`
+ + There are emptyDir, hostPath.
+ + **emptyDir:**
+   + Emptydir volume is intially empty.
+   + It's created when the pod is created.
+   + The volume is shared between all the containers in the pod.
+   + Data survives container restarts but not pod deletion.
+   + How emptyDir volume is attached:
+   + Two cases :
+     + **Default (emptyDir without medium: Memory)**
+       + Stored on the node’s disk (HDD or SSD).
+       + Size is limited by the node’s available storage.
+     + **emptyDir.medium: Memory**
+       + Stored in RAM via a tmpfs mount.
+       + Faster read/write, but volatile and limited by available node memory.
+ + **hostPath:**
+   + As per the name says Mounts a specific file or directory from the node into the Pod.
+   + Since, host path is mounted there are security concerns. So we should try to avoid using them
+   + We should provide readonly access.
+   + Generally we use in daemonsets.
+
+    
+
    
  
        
