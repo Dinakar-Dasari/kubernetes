@@ -42,10 +42,14 @@ pipeline {
             }
 
             steps{
-                sh """
+                script{
+                    withAWS(credentials: 'aws-cred', region: 'us-east-1'){
+                    sh """
                     cd terraform-eks/
                     terraform apply -auto-approve
                 """
+                    }
+                }
             }
         }
     }
