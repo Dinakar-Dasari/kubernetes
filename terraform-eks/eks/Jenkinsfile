@@ -29,7 +29,7 @@ pipeline {
                     withAWS(credentials: 'aws-cred', region: 'us-east-1'){
                         sh """ 
                           cd terraform-eks/eks
-                          terraform plan
+                          terraform plan -lock=false
                         """ 
                       }
                 }
