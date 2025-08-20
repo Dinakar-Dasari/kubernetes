@@ -48,7 +48,7 @@ pipeline {
                     withAWS(credentials: 'aws-cred', region: 'us-east-1'){
                     sh """
                         cd terraform-eks/eks
-                        terraform apply -auto-approve
+                        terraform apply -auto-approve -lock=false
                     """
                     }
                 }
