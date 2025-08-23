@@ -64,11 +64,32 @@
      ```
      kubectl get rs
     ```
+  + Create a Deployment
+     ```
+     kubectl apply -f manifest.yaml
+    ```
+  + To see the deploments
+    ```
+    kubectl get deployments
+    ```
+  + To see the Deployment rollout status
+    ```
+    kubectl rollout status deployment/<name of deployment>
+    ```  
   + command for deployments history
     ```
     kubectl rollout history deployment/<name of deployment>
     ```   
-  +  Rollback a previous deployment
+  + Rollback a previous deployment
       ```
      kubectl rollout undo deployment/<deployment name>
      ```
+     you can rollback to a specific revision by specifying it with --to-revision
+     
+     ```
+     kubectl rollout undo deployment/<deployment name> --to-revision=2
+     ```
++  pause a rollout 
+    ```
+   kubectl rollout pause deployment/nginx-deployment
+    ```
