@@ -1,6 +1,8 @@
 + The cluster (control plane + worker nodes) provides the infrastructure.
 + A Kubernetes manifest file is a YAML (or JSON) document used to declaratively define the desired state of Kubernetes resources (such as Pods, Deployments, Services, Namespaces, etc.) that the Kubernetes control plane will work to maintain.
 + values in metadata should be lowercase
++ **kubens, the CLI tool that makes switching Kubernetes namespaces**
+  + Switch to a namespace (e.g., roboshop):--> `kubens roboshop`
 + **_ekctl is used to create cluster_**
 + **_kubectl is used to interact with cluster_**
 + We should do aws configure as we are interacting with the AWS API to create cluster
