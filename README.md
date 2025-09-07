@@ -74,6 +74,12 @@
     ```
     kubectl get deployments
     ```
+  + Updating a Deployment
+    + Either update the yaml file and give apply command or
+    + give command
+      ```
+      kubectl set image deployment/nginx-deployment nginx=nginx:1.18
+      ```
   + To see the Deployment rollout status
     ```
     kubectl rollout status deployment/<name of deployment>
