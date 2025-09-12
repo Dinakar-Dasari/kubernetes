@@ -101,3 +101,17 @@
     ```
    kubectl rollout pause deployment/nginx-deployment
     ```
++ When you have multiple clusters and wanted to switch to a specific cluster then
+   ```
+   kubectl config use-context <clustername>
+  ```
+  + If you’re working with multiple clusters (e.g., dev, staging, prod), all their connection info is stored in your kubeconfig file (usually ~/.kube/config)
+  + `kubectl config get-contexts` --> List all available contexts
+   ```
+   NAME        CLUSTER     AUTHINFO    NAMESPACE
+    dev-cluster  dev         dev-user    
+    prod-cluster prod       admin-user
+   ```
+
+ 
+   
