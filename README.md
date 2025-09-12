@@ -1,3 +1,15 @@
+**Kubernetes Pod Statuses:**  
+  + **Pending**: Pod has been accepted by the Kubernetes system but has not yet started running. It may be waiting for scheduling or image pulling.
+  + **Running**: At least one container in the pod is running or is in the process of starting or restarting.
+  + **Succeeded**: All containers in the pod have successfully completed, and the pod will not be restarted.
+  + **Failed**: One or more containers terminated with an error, and the pod will not be restarted.
+  + **Unknown**: The state of the pod cannot be determined, usually due to communication issues with the node.
+**Common Kubernetes Error Messages**
+  + **CrashLoopBackOff**: A container repeatedly crashes and Kubernetes backs off restarting it.
+  + **ImagePullBackOff / ErrImagePull:** Kubernetes cannot pull the container image due to incorrect image name, tag, or authentication issues.
+  + **CreateContainerConfigError**: Container configuration errors, such as invalid environment variables or volume mounts.
+  + **OOMKilled**: Container terminated by the Out of Memory Killer for exceeding memory limits
+
 + The cluster (control plane + worker nodes) provides the infrastructure.
 + A Kubernetes manifest file is a YAML (or JSON) document used to declaratively define the desired state of Kubernetes resources (such as Pods, Deployments, Services, Namespaces, etc.) that the Kubernetes control plane will work to maintain.
 + values in metadata should be lowercase
