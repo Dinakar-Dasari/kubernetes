@@ -45,6 +45,7 @@
           | **ReadWriteOnce (RWO)** | One node can read/write(Like USB, at a time can be connected to only one device)                               |
           | **ReadOnlyMany (ROX)**  | Many nodes can only read                              |
           | **ReadWriteMany (RWX)** | Many nodes can read/write (good for shared workloads) |
+          | **ReadWriteOncePod (RWOP)** | - single Pod, read-write                          |
       + **_Capacity:_** Specifies the allocated storage size (1Gi in this example).
       + **_Volume Type:_** Here, we use a host path to utilize local node storage.
         +  HostPath is useful for demonstration purposes,it is not recommended for production environments
@@ -53,7 +54,7 @@
     + Kubernetes administrators are responsible for creating PVs, while users create PVCs to request and utilize that storage.
     + It's like storage is available in PV, but to use we need to request through PVC.
       + _"Hey Kubernetes, I need 5Gi of storage with read-write access."_
-    + Once a PVC is defined, Kubernetes automatically binds it to an available PV that meets specific criteria such as capacity, access modes, volume modes, storage class, and additional parameters.
+    + Once a PVC is defined, Kubernetes automatically binds it to an available PV that meets specific criteria such as capacity, access modes, volume modes(Filesystem or Block device), storage class, and additional parameters.
       + _"Kubernetes then looks for a matching PV that satisfies that claim."_ 
     + Each PVC is exclusively bound to a single PV.
     + If no matching volume exists at the time of creation, the PVC remains in a pending state until a compatible PV becomes available.
@@ -85,14 +86,27 @@
         + ReclaimPolicy: What to do when PVC is deleted
   + You're deploying MySQL in Kubernetes.
   +   You:
-  +   Create a PVC for 10Gi of storage.
-  +   It uses a StorageClass backed by AWS EBS (or) if created manually then it refers that PV.
-  +   Kubernetes creates a new EBS disk.
-  +   Pod uses the PVC → writes data to the EBS disk.
-  +   Pod dies? Data still there. Pod moves? Data is reattached.
+    +   Create a PVC for 10Gi of storage and mention storage class name.
+    +   There will a yaml file with the storage class name with kind storage.
+    +   It uses a StorageClass backed by AWS EBS (or) if created manually then it refers that PV.
+    +   Kubernetes creates a new EBS disk.
+    +   Pod uses the PVC → writes data to the EBS disk.
+    +   Pod dies? Data still there. Pod moves? Data is reattached.
  
+**How it works (flow):**
+ + Developer creates a PVC and specifies storageClassName: fast-ssd
+ + Kubernetes looks for a StorageClass named fast-ssd yaml file.
+   + PVC has a storageClassName, Kubernetes directly asks the provisioner in that StorageClass to create a new PV. 
+ + The StorageClass contains a provisioner (like kubernetes.io/aws-ebs or kubernetes.io/gce-pd) and parameters (e.g., disk type = gp2).
+ + Kubernetes contacts the provisioner → creates a new volume on the cloud{aws) → automatically creates a PV → binds it to the PVC.
+ + The user will mention the PVC Name in the deployment file
+ + `PVC created → Kubernetes sees storageClassName → calls provisioner → provisioner creates volume → new PV object is created → PVC binds to that PV.`
+
++ **Without StorageClass → PVs must exist beforehand (static provisioning).**
++ **With StorageClass → PVC can trigger dynamic provisioning. Kubernetes will ask the underlying cloud/storage system to create a PV automatically that matches the PVC request.** 
 +  PV --> cluster level
 +  PVC --> Name Space level
++  storageclass --> cluster level
 +  EKS admins control cluster level objects(PV).
 +  As a roboshop devops engineer, you need a disk to be created for your application,
 +  we will raise a ticket for this. 5 GB, filesystem type(ext4), etc..it is approved by roboshop team lead/delivery lead. Storage team also checks this and it is approved their team leader.
