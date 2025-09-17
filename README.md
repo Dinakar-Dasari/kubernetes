@@ -45,7 +45,11 @@
    ```
   kubectl get pods
    ```
-+ TO check on which nodes pods are running
++ To edit a Kubernetes resource (like pods, deployments, services, etc.) in your default editor (e.g., vi, nano)
+  ```
+   kubectl edit <resource> <name>
+  ```
++ To check on which nodes pods are running
   ```
   kubectl get pods -o wide
   ```
