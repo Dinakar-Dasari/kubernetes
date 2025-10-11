@@ -123,16 +123,17 @@
   ```
   + If you’re working with multiple clusters (e.g., dev, staging, prod), all their connection info is stored in your kubeconfig file (usually ~/.kube/config)
   + `kubectl config get-contexts` --> List all available contexts
+    
    ```
-   NAME        CLUSTER     AUTHINFO    NAMESPACE
-    dev-cluster  dev         dev-user    
-    prod-cluster prod       admin-user
+       NAME        CLUSTER     AUTHINFO    NAMESPACE
+        dev-cluster  dev         dev-user    
+        prod-cluster prod       admin-user
    ```
    
   + To copy files between your local machine (jump host) and a container inside a Kubernetes Pod.  
       `kubectl cp -c nginx-container index.php nginx-phpfpm:/usr/share/nginx/html/index.php`
       + `-c nginx-container` --> This flag specifies which container inside the Pod you want to copy the file to.
       + `nginx-phpfpm` → the name of the Pod
-
- 
+  + If some pods are running already and no manifest file exists then to get the manifest file,  
+     `kubectl get pod <pod_name> -o yaml  > manifest.yaml`
    
