@@ -128,6 +128,11 @@
     dev-cluster  dev         dev-user    
     prod-cluster prod       admin-user
    ```
+   
+  + To copy files between your local machine (jump host) and a container inside a Kubernetes Pod.  
+      `kubectl cp -c nginx-container index.php nginx-phpfpm:/usr/share/nginx/html/index.php`
+      + `-c nginx-container` --> This flag specifies which container inside the Pod you want to copy the file to.
+      + `nginx-phpfpm` → the name of the Pod
 
  
    
