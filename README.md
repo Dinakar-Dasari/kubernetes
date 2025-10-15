@@ -66,6 +66,7 @@
   + Customize node groups (worker nodes)
   + Configure networking, security groups, IAM, etc.
   + Set specific instance types, AMIs, scaling parameter
++ To know what is the apiVersion for a resource--> `kubectl api-resources`
 + Delete a cluster
    ```
   eksctl delete cluster --name=<<clustername>
