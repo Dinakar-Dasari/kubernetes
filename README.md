@@ -37,7 +37,11 @@
           image: bash:latest  
       restartPolicy: Never
     ```
-  
+  **imagePullPolicy**
+  + Kubernetes determines when the kubelet (container runtime) should pull a container image from the registry before starting a container
+  + **Always**: Kubernetes always pulls the image from the registry (even if it’s already cached locally), ensuring the latest version is always used.
+  + **IfNotPresent**: Kubernetes only pulls the image if it’s not already present on the node locally.
+  + **Never**: Kubernetes never pulls the image from the registry. It will only use a local image if present; otherwise, the pod will fail to start.
 
 + The cluster (control plane + worker nodes) provides the infrastructure.
 + A Kubernetes manifest file is a YAML (or JSON) document used to declaratively define the desired state of Kubernetes resources (such as Pods, Deployments, Services, Namespaces, etc.) that the Kubernetes control plane will work to maintain.
