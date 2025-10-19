@@ -1,6 +1,68 @@
 **_Why Volumes?_**
++ By default containers data is stored in the container. When the container is terminated or deleted all the data is lost.
++ For that purpose volumes concept is introduced. Kubernetes provides two main types of volumes: **Ephemeral Volumes and Persistent Volumes.**
++ **Ephemeral volumes:**
+  + ephemeral volumes have the same lifecycle as the pod itself. Once the pod dies, the data is also lost.
+  + The primary use cases are sharing data between containers and ensuring data survives container restarts within the same Pod.
+  + when the Pod is created, the ephemeral volumes are created, and when the Pod is deleted, the volumes are deleted along with the Pod. We define them in `Volumes` field.
+  + We use the `volumeMounts` field within each container spec to mount a defined volume into one or more containers in the same Pod. Multiple containers in a Pod can mount the same ephemeral volume to share data during the Pod’s lifetime.
+  + Ephemeral volumes types include emptyDir (a blank directory initially), configMap, secret, downwardAPI, and CSI ephemeral volumes provided by certain storage drivers.
+  + **emptyDir:**
+   + Emptydir volume is intially empty.
+   + It's created when the pod is created.
+   + The volume is shared between all the containers in the pod.
+   + Data survives container restarts but not pod deletion.
+   + How emptyDir volume is attached:
+   + Two cases :
+     + **Default (emptyDir without medium: Memory)**
+       + Stored on the node’s disk (HDD or SSD).
+       + Size is limited by the node’s available storage.
+     + **emptyDir.medium: Memory**
+       + Stored in RAM via a tmpfs mount.
+       + Faster read/write, but volatile and limited by available node memory.  
+  + They are ideal for applications where the data is temporary or configuration-related (often stateless).
+  + The storage is actually provisioned on the Node where the Pod is running. When the pod is deleted, Kubernetes cleans up that directory, removing the data.
++ **Persistent Volumes:**
+  + Persistent Volume on the other hand can store the data far beyond the pod’s lifecycle. The data is available even after the pod is destroyed, and can be accessed by newer pods as well.
+  + Persistent Volumes abstract cloud-provider specific storage (like AWS EBS, Google Persistent Disk, Azure Disk, NFS, etc.)
+  + A PV is a cluster resource, created manually by administrators or provisioned dynamically through a StorageClass.
+  + Each PV has details such as: capacity (e.g., 10Gi), access modes (ReadWriteOnce, ReadWriteMany) & reclaim policy (Retain, Recycle, Delete
+  + Every Persistent Volume has a reclaim policy that defines what should happen to the volume after the pod is destroyed.
+    + **Retain**: The persistent volume will still exist after the pod is deleted. It will retain the data of the pod,
+    + **Recycle**: Recycle automatically cleans the Persistent volume. It simply runs a simple rm -rf /volume-mount-path/*. Once the data has been deleted, the volume can be bound to a new pod.
+    + **Delete**: The delete reclaim policy will delete the persistent volume. 
+  + A **Persistent Volume Claim (PVC)** is a user or Pod-level request for storage,
+  + A PVC specifies storage size, access mode, and optionally a StorageClass.
+  + Kubernetes binds the PVC to a PV that satisfies its requirements.
+  + Once bound, Pods can mount this claim as a volume and use it seamlessly
+  + There are two ways PVs are provisioned:
+    + Static provisioning: Administrators create PVs manually before use.
+    + Dynamic provisioning: Kubernetes automatically creates PVs matching PVC requests using StorageClasses.
++ A `hostPath` volume mounts a file or directory from the host Node's filesystem directly into a Pod's container.
+  + The data persists after the Pod is deleted, but the Pod loses access to the data if it is rescheduled to a different Node.
+  + hostPath should not be considered a true Persistent Volume — it behaves more like an ephemeral volume with node-level persistence
+  + hostPath is discouraged for production — it ties pods to specific nodes and breaks Kubernetes’ portability and scheduling flexibility. It’s mostly used for testing, debugging, or system-level daemons like monitoring agents.
+  + Since, host path is mounted there are security concerns. So we should try to avoid using them
+  + We should provide readonly access.
+  + Generally we use in daemonsets.
++ **Without StorageClass → PVs must exist beforehand (static provisioning).**
++ **With StorageClass → PVC can trigger dynamic provisioning. Kubernetes will ask the underlying cloud/storage system to create a PV automatically that matches the PVC request.** 
++  PV --> cluster level
++  PVC --> Name Space level
++  storageclass --> cluster level
++  EKS admins control cluster level objects(PV).
++  As a roboshop devops engineer, you need a disk to be created for your application,
++  we will raise a ticket for this. 5 GB, filesystem type(ext4), etc..it is approved by roboshop team lead/delivery lead. Storage team also checks this and it is approved their team leader.
++  then storage team creates the disk.
++  provide these disk details to EKS admin, then they create PV for us and tell us the name.
++  EBS size is fixed, EFS is elastic it automatically grows upto 48TB.
++  EBS will not have any SG attached, but EFS is in network, so there will be SG attached and 2049 should be allowed.
++  Refer `session-62` notes for EBS/EFS volume setup
+-----
+
+
 + Kubernetes pods are ephemeral. When a pod processes data and is eventually deleted, any data stored within it is lost unless a volume is attached. Volumes in Kubernetes ensure that essential data remains available even after a pod’s lifecycle ends.
-+ For single node:
++ For **single node:**
   + we use a directory on the host as our storage medium. Pod in that node writes data to the /app directory in the node.
   + Even if the pods restarts it will be created in that Node and it will read the previous data from that host path
   + But, this is not the case in Multi Node.
@@ -102,19 +164,7 @@
  + The user will mention the PVC Name in the deployment file
  + `PVC created → Kubernetes sees storageClassName → calls provisioner → provisioner creates volume → new PV object is created → PVC binds to that PV.`
 
-+ **Without StorageClass → PVs must exist beforehand (static provisioning).**
-+ **With StorageClass → PVC can trigger dynamic provisioning. Kubernetes will ask the underlying cloud/storage system to create a PV automatically that matches the PVC request.** 
-+  PV --> cluster level
-+  PVC --> Name Space level
-+  storageclass --> cluster level
-+  EKS admins control cluster level objects(PV).
-+  As a roboshop devops engineer, you need a disk to be created for your application,
-+  we will raise a ticket for this. 5 GB, filesystem type(ext4), etc..it is approved by roboshop team lead/delivery lead. Storage team also checks this and it is approved their team leader.
-+  then storage team creates the disk.
-+  provide these disk details to EKS admin, then they create PV for us and tell us the name.
-+  EBS size is fixed, EFS is elastic it automatically grows upto 48TB.
-+  EBS will not have any SG attached, but EFS is in network, so there will be SG attached and 2049 should be allowed.
-+  Refer `session-62` notes for EBS/EFS volume setup
+
   
  **EBS or EFS static:**
   1. Install drivers
@@ -146,24 +196,8 @@
  + But When the pod terminates for any reason—a restart, a failure, or a manual deletion—the ephemeral volume is also deleted. UID changes so no data. 
  + `Ephemeral volume lifetime = lifetime of the pod UID`
  + There are emptyDir, hostPath.
- + **emptyDir:**
-   + Emptydir volume is intially empty.
-   + It's created when the pod is created.
-   + The volume is shared between all the containers in the pod.
-   + Data survives container restarts but not pod deletion.
-   + How emptyDir volume is attached:
-   + Two cases :
-     + **Default (emptyDir without medium: Memory)**
-       + Stored on the node’s disk (HDD or SSD).
-       + Size is limited by the node’s available storage.
-     + **emptyDir.medium: Memory**
-       + Stored in RAM via a tmpfs mount.
-       + Faster read/write, but volatile and limited by available node memory.
- + **hostPath:**
-   + As per the name says Mounts a specific file or directory from the node into the Pod.
-   + Since, host path is mounted there are security concerns. So we should try to avoid using them
-   + We should provide readonly access.
-   + Generally we use in daemonsets.
+ 
+
 
     
 
