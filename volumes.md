@@ -104,13 +104,21 @@
         + Like, How the volume is accessed
           | Mode                    | Description                                           |
           | ----------------------- | ----------------------------------------------------- |
-          | **ReadWriteOnce (RWO)** | One node can read/write(Like USB, at a time can be connected to only one device)                               |
-          | **ReadOnlyMany (ROX)**  | Many nodes can only read                              |
-          | **ReadWriteMany (RWX)** | Many nodes can read/write (good for shared workloads) |
+          | **ReadWriteOnce (RWO)** | The volume can be mounted as read-write by only one node.(Like USB, at a time can be connected to only one device)                               |
+          | **ReadOnlyMany (ROX)**  | The volume can be mounted as read-only by many nodes.                              |
+          | **ReadWriteMany (RWX)** | The volume can be mounted as read-write by many nodes. (good for shared workloads) |
           | **ReadWriteOncePod (RWOP)** | - single Pod, read-write                          |
       + **_Capacity:_** Specifies the allocated storage size (1Gi in this example).
       + **_Volume Type:_** Here, we use a host path to utilize local node storage.
         +  HostPath is useful for demonstration purposes,it is not recommended for production environments
+      +  **EBS (Elastic Block Store):**
+        +  Supports RWO (ReadWriteOnce)
+        +  Can only be attached to one EC2 instance at a time (so one node in Kubernetes).
+        +  Great for single-node persistent storage needs.
+      +  **EFS (Elastic File System):**
+        +  Supports RWX (ReadWriteMany) and ROX (ReadOnlyMany)
+        +  Can be mounted simultaneously by multiple nodes
+        +  Great for shared storage across multiple Pods in a microservices setup.
        
   + **_Persistent Volume Claims(PVC):_**
     + Kubernetes administrators are responsible for creating PVs, while users create PVCs to request and utilize that storage.
