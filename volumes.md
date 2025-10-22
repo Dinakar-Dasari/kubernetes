@@ -172,6 +172,22 @@
  + The user will mention the PVC Name in the deployment file
  + `PVC created → Kubernetes sees storageClassName → calls provisioner → provisioner creates volume → new PV object is created → PVC binds to that PV.`
 
+ + In Kubernetes, dynamic volume provisioning happens through a StorageClass.
+ + When a PersistentVolumeClaim (PVC) is created that refers to a StorageClass,
+   + Kubernetes talks to the provisioner (e.g., EBS, EFS, etc.)
+   + and automatically provisions storage in the cloud.
+ + Case 1: EBS (Amazon Elastic Block Store)
+   + The EBS CSI driver acts as the provisioner.
+   + When you create a PVC referring to that StorageClass:
+     + A new EBS volume is dynamically created in AWS.
+     + It’s then attached to the EC2 node where the Pod runs.
+     + Access mode: typically RWO (ReadWriteOnce).
+   + Case 2: EFS (Amazon Elastic File System)
+     + The EFS file system itself usually already exists.
+     + The EFS CSI driver doesn’t create new file systems; instead:
+       + It creates **access points** inside an existing EFS file system.
+       + hese access points act as isolated directories for each PV 
+
 
   
  **EBS or EFS static:**
