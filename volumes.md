@@ -204,6 +204,15 @@
  + But When the pod terminates for any reason—a restart, a failure, or a manual deletion—the ephemeral volume is also deleted. UID changes so no data. 
  + `Ephemeral volume lifetime = lifetime of the pod UID`
  + There are emptyDir, hostPath.
+----
+ + EKS admins control cluster level objects...
+ + as a roboshop devops engineer, you need a disk to be created for your application,
+ + we will raise a ticket for this. GB, filesystem type(ext4), etc..it is approved by roboshop team lead/delivery lead. Storage team also checks this and it is approved their team leader..
+ + then storage team creates the disk...
+ + provide these disk details to EKS admin, then they create PV for us and tell us the name.
+ + PV --> K8 resource, physical representation of the actual storage
+ + PVC --> it is the claim done by pods to mount the storage
+ + SC --> k8 object used to create the volume dynamically...
  
 
 
