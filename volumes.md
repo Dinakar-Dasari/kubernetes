@@ -182,11 +182,12 @@
      + A new EBS volume is dynamically created in AWS.
      + It’s then attached to the EC2 node where the Pod runs.
      + Access mode: typically RWO (ReadWriteOnce).
-   + Case 2: EFS (Amazon Elastic File System)
-     + The EFS file system itself usually already exists.
-     + The EFS CSI driver doesn’t create new file systems; instead:
-       + It creates **access points** inside an existing EFS file system.
-       + hese access points act as isolated directories for each PV 
++ Case 2: EFS (Amazon Elastic File System)
+   + The EFS file system itself usually already exists.
+   + The EFS CSI driver doesn’t create new file systems; instead:
+     + It creates **access points** inside an existing EFS file system.
+     + hese access points act as isolated directories for each PV
+   + EFS contains files.
 
 
   
