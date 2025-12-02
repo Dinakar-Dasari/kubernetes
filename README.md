@@ -171,3 +171,4 @@
   + If some pods are running already and no manifest file exists then to get the manifest file,  
      `kubectl get pod <pod_name> -o yaml  > manifest.yaml`
    
++ The command to check labels for all Kubernetes nodes `kubectl get nodes --show-labels`
